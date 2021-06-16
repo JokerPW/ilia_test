@@ -29,6 +29,7 @@ public class DiaTrabalhoEntity {
     }
     
     
+    @SuppressWarnings("deprecation")
     public dateStatus adicionarMarcacao(Date yourDate) {
 	
 	if (marcacoes.size() >= 4)

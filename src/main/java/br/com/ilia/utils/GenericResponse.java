@@ -1,9 +1,8 @@
 package br.com.ilia.utils;
 
-import lombok.Data;
+import org.springframework.http.HttpStatus;
 
-
-public @Data class GenericResponse {
+public class GenericResponse {
     
     public static final String OK = "Created";
     public static final String DIA_CONCLUIDO = "Apenas 4 horários podem ser registrados por dia";
@@ -11,13 +10,17 @@ public @Data class GenericResponse {
     public static final String HORARIO_PREVIO = "Horário já registrado";
     public static final String ALMOCO_INSUFICIENTE = "Deve haver no mínimo 1 hora de almoço";
     
+    
     private String message;
-    private int status;
+    public String getMessage() { return message; }
+
+    private HttpStatus status;
+    public HttpStatus getStatus() { return status; }
     
     
-    public GenericResponse (String message, int status) {
+    public GenericResponse (String message, HttpStatus status) {
 	this.message = message;
 	this.status = status;
     }
-    
+
 }
