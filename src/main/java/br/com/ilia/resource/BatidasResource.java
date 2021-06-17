@@ -18,7 +18,7 @@ import br.com.ilia.service.BatidasService;
 import br.com.ilia.utils.GenericResponse;
 
 @RestController
-@RequestMapping("/components/schemas")
+@RequestMapping("/")
 public class BatidasResource {
     
     @Autowired
@@ -27,7 +27,7 @@ public class BatidasResource {
     
     // example: "2018-08-22T08:00:00"
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    @PostMapping(value="/momento", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value="momento", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity baterPonto(@RequestBody Map<String, ?> payload) {
     
 	String momento = (String) payload.get("momento");

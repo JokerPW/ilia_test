@@ -20,8 +20,7 @@ public class BatidasService {
     public GenericResponse efetuarBatida (Date momento, String key) {
 	
 	GenericResponse ret = null;
-	DiaTrabalhoEntity currDay = fdb.getDay(key);
-	List<Date> marcacoes = currDay.getMarcacoes();
+	List<Date> marcacoes = fdb.getDay(key).getMarcacoes();
 	Date last = null; 
 	
 	if (marcacoes.size() > 0)
@@ -37,10 +36,10 @@ public class BatidasService {
 	    marcacoes.add(momento);
 	    ret = new GenericResponse(GenericResponse.OK, HttpStatus.CREATED);
 	    
-	} else if (last != null && last.compareTo(momento) >= 0) {
+	} else if (last.compareTo(momento) >= 0) {
 	    ret = new GenericResponse(GenericResponse.HORARIO_PREVIO, HttpStatus.CONFLICT);
 	    
-	} else if (last != null && marcacoes.size() == 2) {	// Volta do almoço
+	} else if (marcacoes.size() == 2) {	// Volta do almoço
 	    if (calcularAlmocoMinimo(momento, last)) {
 		marcacoes.add(momento);
 		ret = new GenericResponse(GenericResponse.OK, HttpStatus.CREATED);
