@@ -1,9 +1,9 @@
 package br.com.ilia.repository;
 
-import java.util.Dictionary;
-import java.util.Hashtable;
+import java.util.HashMap;
 
 import br.com.ilia.entity.DiaTrabalhoEntity;
+import br.com.ilia.entity.dto.AlocacaoDTO;
 
 public class FakeDatabase {
     
@@ -21,14 +21,18 @@ public class FakeDatabase {
     }
     
     
-    private Dictionary<String, DiaTrabalhoEntity> dictDates;
+    private HashMap<String, DiaTrabalhoEntity> dictDates;
+    
+    private HashMap<String, AlocacaoDTO> dictAlocacoes;
+    public HashMap<String, AlocacaoDTO> getDictAlocacoes() { return dictAlocacoes; }
     
     
     public FakeDatabase() {
 	if (!canInstantiate)
 	    throw new ExceptionInInitializerError("This object is a Singleton. Please, use its \"getInstance()\" method");
-	
-	dictDates = new Hashtable<String, DiaTrabalhoEntity>();
+
+	dictDates = new HashMap<String, DiaTrabalhoEntity>();
+	dictAlocacoes = new HashMap<String, AlocacaoDTO>();
     }
     
     
@@ -41,5 +45,5 @@ public class FakeDatabase {
 	dictDates.put(key, newDay);
 	return newDay;
     }
-    
+
 }
