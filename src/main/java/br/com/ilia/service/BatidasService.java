@@ -17,8 +17,7 @@ public class BatidasService {
     private FakeDatabase fdb = FakeDatabase.getInstance();
     
 
-    @SuppressWarnings({ "deprecation" })
-    public GenericResponse checarData (Date momento, String key) {
+    public GenericResponse efetuarBatida (Date momento, String key) {
 	
 	GenericResponse ret = null;
 	DiaTrabalhoEntity currDay = fdb.getDay(key);
@@ -28,13 +27,10 @@ public class BatidasService {
 	if (marcacoes.size() > 0)
 	    last = marcacoes.get(marcacoes.size() - 1);
 
-	Calendar c = Calendar.getInstance();
-	c.setTime(momento);
-		
 	if (marcacoes.size() >= 4) {
 	    ret = new GenericResponse(GenericResponse.DIA_CONCLUIDO, HttpStatus.FORBIDDEN);
 	    
-	} else if (c.get(Calendar.DAY_OF_WEEK) == 6 || c.get(Calendar.DAY_OF_WEEK) == 7) {
+	} else if (checarFDS(momento)) {
 	    ret = new GenericResponse(GenericResponse.FDS_PROIBIDO, HttpStatus.FORBIDDEN);
 		
 	} else if (marcacoes.size() < 1) {
@@ -45,9 +41,7 @@ public class BatidasService {
 	    ret = new GenericResponse(GenericResponse.HORARIO_PREVIO, HttpStatus.CONFLICT);
 	    
 	} else if (last != null && marcacoes.size() == 2) {	// Volta do almoço
-	    if ((momento.getHours() * 60 + momento.getMinutes()) - 
-		(last.getHours() * 60 + last.getMinutes()) >= 60) {
-		
+	    if (calcularAlmocoMinimo(momento, last)) {
 		marcacoes.add(momento);
 		ret = new GenericResponse(GenericResponse.OK, HttpStatus.CREATED);
 		
@@ -62,6 +56,20 @@ public class BatidasService {
 		
 	return ret;
 	
-    }//--- End: checarData
+    }//--- End: efetuarBatida
+    
+    
+    private boolean checarFDS(Date momento) {
+	Calendar c = Calendar.getInstance();
+	c.setTime(momento);
+		
+	return c.get(Calendar.DAY_OF_WEEK) == 6 || c.get(Calendar.DAY_OF_WEEK) == 7;
+    }
+    
+    @SuppressWarnings({ "deprecation" })
+    private boolean calcularAlmocoMinimo(Date momento, Date last) {
+	return (momento.getHours() * 60 + momento.getMinutes()) - 
+		(last.getHours() * 60 + last.getMinutes()) >= 60;
+    }
     
 }

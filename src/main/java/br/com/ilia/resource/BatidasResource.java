@@ -21,14 +21,14 @@ import br.com.ilia.utils.GenericResponse;
 @RequestMapping("/components/schemas")
 public class BatidasResource {
     
-    
     @Autowired
     BatidasService service;
+    
     
     // example: "2018-08-22T08:00:00"
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @PostMapping(value="/momento", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity BaterPonto(@RequestBody Map<String, ?> payload) {
+    public ResponseEntity baterPonto(@RequestBody Map<String, ?> payload) {
     
 	String momento = (String) payload.get("momento");
 	
@@ -46,10 +46,10 @@ public class BatidasResource {
 	}
 
 	String key = momento.split("T")[0];
-	GenericResponse ret = service.checarData(momentoInformado, key);
+	GenericResponse ret = service.efetuarBatida(momentoInformado, key);
 	return new ResponseEntity (ret.getMessage(), ret.getStatus());
 	
-    }//--- End: BaterPonto
+    }//--- End: baterPonto
     
     
 }
