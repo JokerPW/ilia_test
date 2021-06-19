@@ -6,25 +6,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import br.com.ilia.entity.DiaTrabalhoEntity;
-import br.com.ilia.entity.dto.AlocacaoDTO;
+import br.com.ilia.entity.dto.AlocacaoInsertDTO;
 import br.com.ilia.repository.FakeDatabase;
+import br.com.ilia.utils.DataConverter;
 import br.com.ilia.utils.GenericResponse;
 
 @Service
 public class AlocacoesService {
     
-    private final Long HOUR_MILI = (long) (60 * 60 * 1000);
-    private final Long MIN_MILI = (long) (60 * 1000);
-    private final Long SEC_MILI = (long) (1000);
-
     private FakeDatabase fdb = FakeDatabase.getInstance();
 
     
-    public GenericResponse alocarHoras(AlocacaoDTO payload, Date momentoInformado) {
+    public GenericResponse alocarHoras(AlocacaoInsertDTO payload, Date momentoInformado) {
 
 	GenericResponse ret = null;
 
-	DiaTrabalhoEntity dia = fdb.getDay(payload.getDia());
+	DiaTrabalhoEntity dia = fdb.getDay(payload.getDia(), false);
 	String alocKey = payload.getDia() + "_" + payload.getNomeProjeto();
 	
 	if (dia == null || dia.getMarcacoes() == null || dia.getMarcacoes().size() < 2) {
@@ -37,7 +34,7 @@ public class AlocacoesService {
 	    
 	    if (tempoMilli <= (slotMilli - ocupadoMilli)) {
 		ret = new GenericResponse(GenericResponse.ALOCADAS, HttpStatus.CREATED);
-		fdb.getDictAlocacoes().put(alocKey, payload);
+		fdb.getHashMapAlocacoes().put(alocKey, payload);
 	    } else {
 		ret = new GenericResponse(GenericResponse.ALOCACAO_MAIOR, HttpStatus.BAD_REQUEST);
 	    }
@@ -45,17 +42,18 @@ public class AlocacoesService {
 	}
 	
 	return ret;
-    }
+	
+    }//--- End: alocarHoras
     
     
     // example: PT2H30M0S
     private Long calcularAlocacao(String yourTempo) {
-	String tempo = yourTempo.substring(2).replaceAll("[a-zA-Z]","-");
-	String[] tempoFields = tempo.split("-");
+	String tempo = DataConverter.plainFromPtTime(yourTempo);
+	String[] tempoFields = tempo.split(":");
 	
-	Long tempoMilli = Long.parseLong(tempoFields[0]) * HOUR_MILI +
-		Long.parseLong(tempoFields[1]) * MIN_MILI +
-		Long.parseLong(tempoFields[2]) * SEC_MILI;
+	Long tempoMilli = Long.parseLong(tempoFields[0]) * DataConverter.HOUR_MILLI +
+		Long.parseLong(tempoFields[1]) * DataConverter.MIN_MILLI +
+		Long.parseLong(tempoFields[2]) * DataConverter.SEC_MILLI;
 	
 	return tempoMilli;
     }
@@ -74,10 +72,10 @@ public class AlocacoesService {
     private Long calcularAlocacaoDia(String dayKey) {
 	Long[] tempoAlocado = {0l};
 	
-	fdb.getDictAlocacoes().entrySet()
+	fdb.getHashMapAlocacoes().entrySet()
         .stream()
-        .filter(entry -> ((AlocacaoDTO) entry.getValue()).getDia().split("T")[0].equals(dayKey))
-        .forEach(entry -> tempoAlocado[0] += calcularAlocacao(((AlocacaoDTO) entry.getValue()).getTempo()));
+        .filter(entry -> ((AlocacaoInsertDTO) entry.getValue()).getDia().split("T")[0].equals(dayKey))
+        .forEach(entry -> tempoAlocado[0] += calcularAlocacao(((AlocacaoInsertDTO) entry.getValue()).getTempo()));
 	
 	return tempoAlocado[0];
     }

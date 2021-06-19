@@ -15,6 +15,9 @@ public class GenericResponse {
     public static final String ALOCADAS = "Horas alocadas ao projeto";
     public static final String ALOCACAO_MAIOR = "Não pode alocar tempo maior que o tempo trabalhado no dia";
     
+    // Mensagens Alocacoes
+    public static final String RELATORIO_NF = "Relatório não encontrado";
+    
     
     private String message;
     public String getMessage() { return message; }

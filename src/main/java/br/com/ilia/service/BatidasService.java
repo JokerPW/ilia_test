@@ -20,7 +20,7 @@ public class BatidasService {
     public GenericResponse efetuarBatida (Date momento, String key) {
 	
 	GenericResponse ret = null;
-	List<Date> marcacoes = fdb.getDay(key).getMarcacoes();
+	List<Date> marcacoes = fdb.getDay(key, true).getMarcacoes();
 	Date last = null; 
 	
 	if (marcacoes.size() > 0)
@@ -62,13 +62,11 @@ public class BatidasService {
 	Calendar c = Calendar.getInstance();
 	c.setTime(momento);
 		
-	return c.get(Calendar.DAY_OF_WEEK) == 6 || c.get(Calendar.DAY_OF_WEEK) == 7;
+	return c.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY || c.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY;
     }
     
-    @SuppressWarnings({ "deprecation" })
     private boolean calcularAlmocoMinimo(Date momento, Date last) {
-	return (momento.getHours() * 60 + momento.getMinutes()) - 
-		(last.getHours() * 60 + last.getMinutes()) >= 60;
+	return (momento.getTime() - last.getTime()) >= (60000);
     }
     
 }

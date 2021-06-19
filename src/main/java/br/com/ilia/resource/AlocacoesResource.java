@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.ilia.entity.dto.AlocacaoDTO;
+import br.com.ilia.entity.dto.AlocacaoInsertDTO;
 import br.com.ilia.service.AlocacoesService;
 import br.com.ilia.utils.GenericResponse;
 
@@ -27,7 +27,7 @@ public class AlocacoesResource {
     
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @PostMapping(value="alocacao", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity alocarHoras(@RequestBody AlocacaoDTO payload) {
+    public ResponseEntity alocarHoras(@RequestBody AlocacaoInsertDTO payload) {
 
 	if (payload == null || 
 	    payload.getDia() == null || payload.getDia().length() <= 0 ||
@@ -45,7 +45,6 @@ public class AlocacoesResource {
 	    return new ResponseEntity ("Data e hora em formato inválido", HttpStatus.BAD_REQUEST);
 	}
 
-	
 	GenericResponse ret = service.alocarHoras(payload, momentoInformado);
 	return new ResponseEntity (ret.getMessage(), ret.getStatus());
 	

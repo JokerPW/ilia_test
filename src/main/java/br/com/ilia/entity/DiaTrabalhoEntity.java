@@ -5,6 +5,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import br.com.ilia.utils.DataConverter;
+
 public class DiaTrabalhoEntity {
     
     /**
@@ -29,7 +31,6 @@ public class DiaTrabalhoEntity {
     }
     
     
-    @SuppressWarnings("deprecation")
     public dateStatus adicionarMarcacao(Date yourDate) {
 	
 	if (marcacoes.size() >= 4)
@@ -52,8 +53,7 @@ public class DiaTrabalhoEntity {
 	    return dateStatus.HORARIO_PREVIO;
 	
 	if (marcacoes.size() == 2) {	// Volta do almoço
-	    if ((yourDate.getHours() * 60 + yourDate.getMinutes()) - 
-		(last.getHours() * 60 + last.getMinutes()) >= 60) {
+	    if ((yourDate.getTime() - last.getTime()) >= DataConverter.HORA_ALMOCO) {
 		
 		marcacoes.add(yourDate);
 		return dateStatus.OK;

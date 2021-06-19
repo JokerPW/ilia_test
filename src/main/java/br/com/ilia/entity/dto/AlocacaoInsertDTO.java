@@ -1,6 +1,6 @@
 package br.com.ilia.entity.dto;
 
-public class AlocacaoDTO {
+public class AlocacaoInsertDTO {
     
     private String dia;
     public String getDia() { return dia; }
@@ -12,11 +12,10 @@ public class AlocacaoDTO {
     public String getNomeProjeto() { return nomeProjeto; }
     
     
-    public AlocacaoDTO(String dia, String tempo, String nomeProjeto) {
-	super();
+    public AlocacaoInsertDTO(String dia, String tempo, String nomeProjeto) {
 	this.dia = dia;
 	this.tempo = tempo;
 	this.nomeProjeto = nomeProjeto;
     }
-
+    
 }

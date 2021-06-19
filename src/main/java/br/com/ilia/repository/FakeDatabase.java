@@ -3,7 +3,7 @@ package br.com.ilia.repository;
 import java.util.HashMap;
 
 import br.com.ilia.entity.DiaTrabalhoEntity;
-import br.com.ilia.entity.dto.AlocacaoDTO;
+import br.com.ilia.entity.dto.AlocacaoInsertDTO;
 
 public class FakeDatabase {
     
@@ -21,29 +21,33 @@ public class FakeDatabase {
     }
     
     
-    private HashMap<String, DiaTrabalhoEntity> dictDates;
+    private HashMap<String, DiaTrabalhoEntity> hashMapDates;
     
-    private HashMap<String, AlocacaoDTO> dictAlocacoes;
-    public HashMap<String, AlocacaoDTO> getDictAlocacoes() { return dictAlocacoes; }
+    private HashMap<String, AlocacaoInsertDTO> hashMapAlocacoes;
+    public HashMap<String, AlocacaoInsertDTO> getHashMapAlocacoes() { return hashMapAlocacoes; }
     
     
     public FakeDatabase() {
 	if (!canInstantiate)
 	    throw new ExceptionInInitializerError("This object is a Singleton. Please, use its \"getInstance()\" method");
 
-	dictDates = new HashMap<String, DiaTrabalhoEntity>();
-	dictAlocacoes = new HashMap<String, AlocacaoDTO>();
+	hashMapDates = new HashMap<String, DiaTrabalhoEntity>();
+	hashMapAlocacoes = new HashMap<String, AlocacaoInsertDTO>();
     }
     
     
-    public DiaTrabalhoEntity getDay(String key) {
+    public DiaTrabalhoEntity getDay(String key, boolean createNew) {
 	
-	if (dictDates.get(key) != null)
-	    return dictDates.get(key);
+	if (hashMapDates.get(key) != null)
+	    return hashMapDates.get(key);
 	
-	DiaTrabalhoEntity newDay = new DiaTrabalhoEntity();
-	dictDates.put(key, newDay);
-	return newDay;
+	if (createNew) {
+	    DiaTrabalhoEntity newDay = new DiaTrabalhoEntity();
+	    hashMapDates.put(key, newDay);
+	    return newDay;
+	}
+	
+	return null;
     }
 
 }
