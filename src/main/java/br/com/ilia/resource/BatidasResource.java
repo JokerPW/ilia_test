@@ -29,7 +29,10 @@ public class BatidasResource {
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @PostMapping(value="momento", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity baterPonto(@RequestBody Map<String, ?> payload) {
-    
+
+	if (payload == null || payload.isEmpty() || payload.get("momento") == null)
+	    return new ResponseEntity ("Campo obrigatório não informado", HttpStatus.BAD_REQUEST);
+	
 	String momento = (String) payload.get("momento");
 	
 	if (momento == null || momento.length() <= 0)
